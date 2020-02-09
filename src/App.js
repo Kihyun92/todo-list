@@ -5,13 +5,29 @@ import TodoItemList from './components/TodoItemList';
 
 class App extends Component {
     id = 3;
-
+    textColors = ['#343a40', '#f03e3e', '#12b886', '#228ae6'];
     state = {
         input: '',
+        selectedColor: this.textColors[0],
         todos: [
-            { id: 0, text: '리액트 소개', checked: false },
-            { id: 1, text: '리액트 소개', checked: true },
-            { id: 2, text: '리액트 소개', checked: false }
+            {
+                id: 0,
+                text: '리액트 소개',
+                checked: false,
+                color: this.textColors[0]
+            },
+            {
+                id: 1,
+                text: '리액트 소개',
+                checked: true,
+                color: this.textColors[0]
+            },
+            {
+                id: 2,
+                text: '리액트 소개',
+                checked: false,
+                color: this.textColors[0]
+            }
         ]
     };
 
@@ -22,13 +38,15 @@ class App extends Component {
     };
 
     handleCreate = () => {
-        const { input, todos } = this.state;
+        const { input, todos, selectedColor } = this.state;
         this.setState({
             input: '',
+            selectedColor: selectedColor,
             todos: todos.concat({
                 id: this.id++,
                 text: input,
-                checked: false
+                checked: false,
+                color: selectedColor
             })
         });
     };
@@ -56,20 +74,27 @@ class App extends Component {
     };
 
     handleRemove = id => {
-        const {todos} = this.state;
+        const { todos } = this.state;
         this.setState({
             todos: todos.filter(todo => todo.id !== id)
+        });
+    };
+
+    handleChangeColor = index => {
+        this.setState({
+            selectedColor: this.textColors[index]
         })
-    }
+    };
 
     render() {
-        const { input, todos } = this.state;
+        const { input, selectedColor, todos } = this.state;
         const {
             handleChange,
             handleCreate,
             handleKeyPress,
             handleToggle,
-            handleRemove
+            handleRemove,
+            handleChangeColor
         } = this;
 
         return (
@@ -77,13 +102,21 @@ class App extends Component {
                 form={
                     <Form
                         value={input}
+                        selectedColor={selectedColor}
                         onKeyPress={handleKeyPress}
                         onChange={handleChange}
                         onCreate={handleCreate}
                     />
                 }
+                textColors={this.textColors}
+                selectedColor={selectedColor}
+                onChangeColor={handleChangeColor}
             >
-                <TodoItemList todos={todos} onToggle={handleToggle} onRemove={handleRemove}/>
+                <TodoItemList
+                    todos={todos}
+                    onToggle={handleToggle}
+                    onRemove={handleRemove}
+                />
             </TodoListTemplate>
         );
     }
